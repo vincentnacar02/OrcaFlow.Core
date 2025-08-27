@@ -8,25 +8,32 @@
 
     public class OrchestratorBuilder<TContext>
     {
-        private readonly List<Func<TContext, ITask<TContext>>> _taskFactories = new();
+        private readonly List<Func<IServiceProvider, TContext, ITask<TContext>>> _taskFactories = new();
         private readonly OrchestratorOptions<TContext> _options = new();
+        private IServiceProvider? _serviceProvider;
+
+        public OrchestratorBuilder<TContext> UseServiceProvider(IServiceProvider provider)
+        {
+            _serviceProvider = provider;
+            return this;
+        }
 
         public OrchestratorBuilder<TContext> AddStep<T>(Func<TContext, bool>? condition = null)
-            where T : ITask<TContext>, new()
+            where T : class, ITask<TContext>
         {
-            _taskFactories.Add(ctx =>
+            _taskFactories.Add((sp, ctx) =>
             {
                 if (condition != null && !condition(ctx))
                     return new NoOpTask<TContext>($"Skipped {typeof(T).Name}");
 
-                return new T();
+                return (ITask<TContext>)(sp.GetService(typeof(T)) ?? Activator.CreateInstance<T>());
             });
             return this;
         }
 
         public OrchestratorBuilder<TContext> AddStep(ITask<TContext> step, Func<TContext, bool>? condition = null)
         {
-            _taskFactories.Add(ctx =>
+            _taskFactories.Add((sp, ctx) =>
             {
                 if (condition != null && !condition(ctx))
                     return new NoOpTask<TContext>($"Skipped {step.Name}");
@@ -42,7 +49,7 @@
             return this;
         }
 
-        public Orchestrator<TContext> Build() => new(_taskFactories, _options);
+        public Orchestrator<TContext> Build() => new(_taskFactories, _options, _serviceProvider);
     }
 
 }

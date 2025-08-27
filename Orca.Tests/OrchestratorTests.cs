@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Orca.Tests
 {
     public class OrchestratorTests
@@ -166,6 +168,51 @@ namespace Orca.Tests
             await orch.RunAsync(ctx);
 
             Assert.Equal(new[] { "before", "A", "Step1", "B", "after" }, ctx.Log);
+        }
+
+        class TestService
+        {
+            public string Name => "HelloService";
+        }
+
+        class TestServiceBackedTask : ITask<TestContext>
+        {
+            public string Name => "Test DI";
+            private readonly TestService _service;
+
+            public TestServiceBackedTask(TestService service)
+            {
+                _service = service;
+            }
+
+            public Task ExecuteAsync(TestContext context, CancellationToken token = default)
+            {
+                context.Log.Add(_service.Name);
+                return Task.CompletedTask;
+            }
+        }
+
+        [Fact]
+        public async Task DependencyInjectionTest()
+        {
+            // Setup DI container
+            var services = new ServiceCollection();
+            services.AddSingleton<TestService>();
+            services.AddTransient<TestServiceBackedTask>();
+            var sp = services.BuildServiceProvider();
+
+            // Build orchestrator
+            var orch = new OrchestratorBuilder<TestContext>()
+            .UseServiceProvider(sp)
+                .UseServiceProvider(sp)
+                .AddStep<TestServiceBackedTask>() // resolved via DI
+                .Build();
+
+            // Run
+            var ctx = new TestContext();
+            await orch.RunAsync(ctx);
+
+            Assert.Contains("HelloService", ctx.Log);
         }
     }
 }

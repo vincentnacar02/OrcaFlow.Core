@@ -2,14 +2,16 @@
 {
     public class Orchestrator<TContext>
     {
-        private readonly IReadOnlyList<Func<TContext, ITask<TContext>>> _taskFactories;
+        private readonly IReadOnlyList<Func<IServiceProvider?, TContext, ITask<TContext>>> _taskFactories;
         private readonly OrchestratorOptions<TContext> _options;
+        private readonly IServiceProvider? _serviceProvider;
 
-        public Orchestrator(IEnumerable<Func<TContext, ITask<TContext>>> taskFactories,
-                            OrchestratorOptions<TContext> options)
+        public Orchestrator(IEnumerable<Func<IServiceProvider?, TContext, ITask<TContext>>> taskFactories,
+                            OrchestratorOptions<TContext> options, IServiceProvider? serviceProvider = null)
         {
             _taskFactories = taskFactories.ToList();
             _options = options;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task RunAsync(TContext ctx, CancellationToken token = default)
@@ -17,7 +19,7 @@
             foreach (var factory in _taskFactories)
             {
                 token.ThrowIfCancellationRequested();
-                var task = factory(ctx);
+                var task = factory(_serviceProvider, ctx);
 
                 try
                 {
