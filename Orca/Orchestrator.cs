@@ -24,7 +24,15 @@
                     if (_options.OnStepStarted != null)
                         await _options.OnStepStarted(task, ctx);
 
-                    await task.ExecuteAsync(ctx, token);
+                    Func<Task> pipeline = () => task.ExecuteAsync(ctx, token);
+
+                    foreach (var middleware in _options.Middlewares.AsEnumerable().Reverse())
+                    {
+                        var next = pipeline;
+                        pipeline = () => middleware(task, ctx, next, token);
+                    }
+
+                    await pipeline();
 
                     if (_options.OnStepCompleted != null)
                         await _options.OnStepCompleted(task, ctx);

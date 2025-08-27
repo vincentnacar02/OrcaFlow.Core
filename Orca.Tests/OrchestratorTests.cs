@@ -138,5 +138,34 @@ namespace Orca.Tests
             Assert.Contains("One", ctx.Log);
             Assert.Contains("Two", ctx.Log);
         }
+
+        // Middleware Test
+        [Fact]
+        public async Task MiddlewareTest()
+        {
+            var orch = new OrchestratorBuilder<TestContext>()
+                .AddStep(new AppendTask("Step1"))
+                .Configure(o =>
+                {
+                    o.Use(async (task, ctx, next, token) =>
+                    {
+                        ctx.Log.Add("before");
+                        await next();
+                        ctx.Log.Add("after");
+                    });
+                    o.Use(async (task, ctx, next, token) =>
+                    {
+                        ctx.Log.Add("A");
+                        await next();
+                        ctx.Log.Add("B");
+                    });
+                })
+                .Build();
+
+            var ctx = new TestContext();
+            await orch.RunAsync(ctx);
+
+            Assert.Equal(new[] { "before", "A", "Step1", "B", "after" }, ctx.Log);
+        }
     }
 }

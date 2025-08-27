@@ -23,7 +23,6 @@ Define tasks, chain them into pipelines, run them sequentially or in parallel, a
 
 ```bash
 dotnet add reference ../Orca/Orca.csproj
-
 ```
 
 ### 2. Define a task
@@ -76,6 +75,11 @@ var builder = new OrchestratorBuilder<List<string>>()
             Console.WriteLine($"Completed {task.Name}");
         options.OnStepFailed = async (task, ex, ctx) =>
             Console.WriteLine($"Step {task.Name} failed: {ex.Message}");
+        // Middleware
+        options.Use(async (task, ctx, next, token) =>
+        {
+            await next();
+        });
     });
 
 var orchestrator = builder.Build();

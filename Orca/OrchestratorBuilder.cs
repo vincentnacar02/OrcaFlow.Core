@@ -1,5 +1,11 @@
 ﻿namespace Orca
 {
+    public delegate Task TaskMiddleware<TContext>(
+        ITask<TContext> task,
+        TContext ctx,
+        Func<Task> next,
+        CancellationToken token);
+
     public class OrchestratorBuilder<TContext>
     {
         private readonly List<Func<TContext, ITask<TContext>>> _taskFactories = new();
