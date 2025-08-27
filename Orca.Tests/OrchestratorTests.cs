@@ -203,7 +203,6 @@ namespace Orca.Tests
 
             // Build orchestrator
             var orch = new OrchestratorBuilder<TestContext>()
-            .UseServiceProvider(sp)
                 .UseServiceProvider(sp)
                 .AddStep<TestServiceBackedTask>() // resolved via DI
                 .Build();
