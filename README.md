@@ -85,6 +85,30 @@ var builder = new OrchestratorBuilder<List<string>>()
 var orchestrator = builder.Build();
 ```
 
+Or via DependencyInjection
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    // Register services + tasks
+    services.AddSingleton<MyService>();
+    services.AddTransient<ServiceBackedTask>();
+    services.AddTransient<OtherTask>();
+
+    // Register orchestrator via extension
+    services.AddOrchestrator<TestContext>(builder =>
+    {
+        builder.AddStep<ServiceBackedTask>()
+               .AddStep<OtherTask>()
+               .Configure(o =>
+               {
+                   o.OnStepStarted = async (task, ctx) =>
+                       Console.WriteLine($"Starting {task.Name}...");
+               });
+    });
+}
+```
+
 ### 4. Run the pipeline
 
 ```csharp
@@ -93,6 +117,27 @@ var context = new List<string>();
 await orchestrator.RunAsync(context);
 
 Console.WriteLine("Items: " + string.Join(", ", context));
+```
+
+Or inject the Orchestrator
+
+```csharp
+public class MyController
+{
+    private readonly Orchestrator<TestContext> _orchestrator;
+
+    public MyController(Orchestrator<TestContext> orchestrator)
+    {
+        _orchestrator = orchestrator;
+    }
+
+    public async Task<IActionResult> Run()
+    {
+        var ctx = new TestContext();
+        await _orchestrator.RunAsync(ctx);
+        return new OkObjectResult(ctx.Log);
+    }
+}
 ```
 
 Example Output:
