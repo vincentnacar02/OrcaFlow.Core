@@ -14,6 +14,7 @@ Define tasks, chain them into pipelines, run them sequentially or in parallel, a
 - **Lifecycle hooks** – `OnStepStarted`, `OnStepCompleted`, `OnStepFailed`
 - **Error handling strategies** – `StopOnError` or `SkipFailed`
 - **Cancellation support** – via `CancellationToken`
+- **Dependency Injection support** with `IServiceCollection`
 
 ## 🚀 Getting Started
 
