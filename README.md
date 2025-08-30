@@ -39,7 +39,7 @@ public class AddTask : ITask<Context>
         return Task.CompletedTask;
     }
 }
-...
+
 public class MultiplyTask : ITask<Context>
 {
     public string Name => nameof(MultiplyTask);
