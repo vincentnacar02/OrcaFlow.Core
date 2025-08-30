@@ -20,7 +20,9 @@ Define tasks, chain them into pipelines, run them sequentially or in parallel, a
 
 ### 1. Install
 
-(For now, clone or add as a project reference – NuGet packaging coming soon.)
+```bash
+NuGet\Install-Package OrcaFlow.Core -Version 0.1.0
+```
 
 ```bash
 dotnet add reference ../Orca/Orca.csproj
@@ -158,8 +160,6 @@ Items: one, two, conditional, parallel-1, parallel-2
 ### Roadmap
 
 - Retry policies (with backoff)
-- Structured logging integration
-- NuGet packaging
 
 ### Project Structure
 
