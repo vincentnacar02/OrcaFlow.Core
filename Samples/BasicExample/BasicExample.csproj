@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Orca\Orca.csproj" />
+    <PackageReference Include="OrcaFlow.Core" Version="0.2.0" />
   </ItemGroup>
 
 </Project>
