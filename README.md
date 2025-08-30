@@ -29,20 +29,24 @@ NuGet\Install-Package OrcaFlow.Core -Version 0.2.0
 Tasks implement the ITask<TContext> interface:
 
 ```csharp
-public sealed class AppendTask : ITask<List<string>>
+public class AddTask : ITask<Context>
 {
-    public string Name { get; }
-    private readonly string _msg;
+    public string Name => nameof(AddTask);
 
-    public AppendTask(string name, string msg)
+    public Task ExecuteAsync(Context context, CancellationToken token = default)
     {
-        Name = name;
-        _msg = msg;
+        context.Result = context.Num1 + context.Num2;
+        return Task.CompletedTask;
     }
+}
+...
+public class MultiplyTask : ITask<Context>
+{
+    public string Name => nameof(MultiplyTask);
 
-    public Task ExecuteAsync(List<string> context, CancellationToken token = default)
+    public Task ExecuteAsync(Context context, CancellationToken token = default)
     {
-        context.Add(_msg);
+        context.Result = context.Result * 10;
         return Task.CompletedTask;
     }
 }
@@ -53,21 +57,12 @@ public sealed class AppendTask : ITask<List<string>>
 Create a pipeline with sequential and parallel steps:
 
 ```csharp
-var builder = new OrchestratorBuilder<List<string>>()
-    .AddStep(new AppendTask("A", "one"))
-    .AddStep(new AppendTask("B", "two"))
-    .AddStep<AppendTask>(ctx => ctx.Count < 5) // conditional with generic new()
-    .AddStep(
-        new ParallelGroupTask<List<string>>(
-            "ParallelGroup",
-            new ITask<List<string>>[]
-            {
-                new AppendTask("P1", "parallel-1"),
-                new AppendTask("P2", "parallel-2")
-            }))
+var builder = new OrchestratorBuilder<Context>()
+    .AddStep<AddTask>()
+    .AddStep<MultiplyTask>()
     .Configure(options =>
     {
-        options.ErrorStrategy = ErrorHandlingStrategy.ContinueOnError;
+        options.ErrorStrategy = ErrorHandlingStrategy.StopOnError;
         options.OnStepStarted = async (task, ctx) =>
             Console.WriteLine($"Starting {task.Name}...");
         options.OnStepCompleted = async (task, ctx) =>
@@ -111,11 +106,15 @@ public void ConfigureServices(IServiceCollection services)
 ### 4. Run the pipeline
 
 ```csharp
-var context = new List<string>();
+var ctx = new Context
+{
+    Num1 = 1,
+    Num2 = 2
+};
 
 await orchestrator.RunAsync(context);
 
-Console.WriteLine("Items: " + string.Join(", ", context));
+Console.WriteLine("Result: " + context.Result);
 ```
 
 Or inject the Orchestrator
@@ -139,20 +138,6 @@ public class MyController
 }
 ```
 
-Example Output:
-
-```
-Starting A...
-Completed A
-Starting B...
-Completed B
-Starting AppendTask...
-Completed AppendTask
-Starting ParallelGroup...
-Completed ParallelGroup
-Items: one, two, conditional, parallel-1, parallel-2
-```
-
 ### Roadmap
 
 - Retry policies (with backoff)
@@ -160,6 +145,7 @@ Items: one, two, conditional, parallel-1, parallel-2
 ### Project Structure
 
 ```
-/Orca          → library code
+/Orca        → library code
 /Orca.Tests  → unit tests
+/Samples     → Example projects
 ```
