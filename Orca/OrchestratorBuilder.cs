@@ -26,7 +26,7 @@
                 if (condition != null && !condition(ctx))
                     return new NoOpTask<TContext>($"Skipped {typeof(T).Name}");
 
-                return (ITask<TContext>)(sp.GetService(typeof(T)) ?? Activator.CreateInstance<T>());
+                return (ITask<TContext>)(sp?.GetService(typeof(T)) ?? Activator.CreateInstance<T>());
             });
             return this;
         }

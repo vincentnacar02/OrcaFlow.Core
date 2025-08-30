@@ -21,7 +21,7 @@ Define tasks, chain them into pipelines, run them sequentially or in parallel, a
 ### 1. Install
 
 ```bash
-NuGet\Install-Package OrcaFlow.Core -Version 0.1.0
+NuGet\Install-Package OrcaFlow.Core -Version 0.2.0
 ```
 
 ### 2. Define a task

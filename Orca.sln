@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orca", "Orca\Orca.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orca.Tests", "Orca.Tests\Orca.Tests.csproj", "{AC701FA4-4AFD-4939-AE04-92E59BC59779}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicExample", "Samples\BasicExample\BasicExample.csproj", "{041B9EAB-7AAA-4724-8474-56F792738F2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AC701FA4-4AFD-4939-AE04-92E59BC59779}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC701FA4-4AFD-4939-AE04-92E59BC59779}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC701FA4-4AFD-4939-AE04-92E59BC59779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{041B9EAB-7AAA-4724-8474-56F792738F2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{041B9EAB-7AAA-4724-8474-56F792738F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{041B9EAB-7AAA-4724-8474-56F792738F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{041B9EAB-7AAA-4724-8474-56F792738F2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
