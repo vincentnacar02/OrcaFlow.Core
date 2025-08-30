@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <!-- NuGet package metadata -->
     <PackageId>OrcaFlow.Core</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>Vincent Nacar</Authors>
     <Company>Vincent Nacar</Company>
     <PackageDescription>A lightweight orchestration library for building fluent, flexible workflows in C#.</PackageDescription>

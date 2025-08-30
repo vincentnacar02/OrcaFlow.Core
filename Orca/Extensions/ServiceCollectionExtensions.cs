@@ -5,19 +5,23 @@ namespace Orca.Extensions
     {
         public static IServiceCollection AddOrchestrator<TContext>(
             this IServiceCollection services,
-            Action<OrchestratorBuilder<TContext>> configureBuilder)
+            Action<OrchestratorBuilder<TContext>> configureBuilder,
+            ServiceLifetime lifetime = ServiceLifetime.Transient)
             where TContext : class
         {
-            // Register Orchestrator<TContext> as a singleton (or scoped if preferred)
-            services.AddSingleton<Orchestrator<TContext>>(sp =>
-            {
-                var builder = new OrchestratorBuilder<TContext>()
-                    .UseServiceProvider(sp); // hook up DI resolution for tasks
+            services.Add(new ServiceDescriptor(
+                    typeof(Orchestrator<TContext>),
+                    sp =>
+                        {
+                            var builder = new OrchestratorBuilder<TContext>()
+                                .UseServiceProvider(sp); // Hook up DI for tasks
 
-                configureBuilder(builder);
+                            configureBuilder(builder);
 
-                return builder.Build();
-            });
+                            return builder.Build();
+                        },
+                    lifetime)
+                );
             return services;
         }
     }
