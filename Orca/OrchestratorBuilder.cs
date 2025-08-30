@@ -8,7 +8,7 @@
 
     public class OrchestratorBuilder<TContext>
     {
-        private readonly List<Func<IServiceProvider, TContext, ITask<TContext>>> _taskFactories = new();
+        private readonly List<Func<IServiceProvider?, TContext, ITask<TContext>>> _taskFactories = new();
         private readonly OrchestratorOptions<TContext> _options = new();
         private IServiceProvider? _serviceProvider;
 
