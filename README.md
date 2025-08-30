@@ -24,10 +24,6 @@ Define tasks, chain them into pipelines, run them sequentially or in parallel, a
 NuGet\Install-Package OrcaFlow.Core -Version 0.1.0
 ```
 
-```bash
-dotnet add reference ../Orca/Orca.csproj
-```
-
 ### 2. Define a task
 
 Tasks implement the ITask<TContext> interface:
