@@ -1,4 +1,4 @@
-# Orca
+# OrcaFlow.Core
 
 A lightweight, generic **task orchestration library** for .NET.  
 Define tasks, chain them into pipelines, run them sequentially or in parallel, and add conditions – all with a minimal API.
@@ -21,7 +21,7 @@ Define tasks, chain them into pipelines, run them sequentially or in parallel, a
 ### 1. Install
 
 ```bash
-NuGet\Install-Package OrcaFlow.Core -Version 0.2.0
+NuGet\Install-Package OrcaFlow.Core -Version 0.3.0
 ```
 
 ### 2. Define a task
