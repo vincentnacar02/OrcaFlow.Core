@@ -11,10 +11,10 @@
     <Company>Vincent Nacar</Company>
     <PackageDescription>A lightweight orchestration library for building fluent, flexible workflows in C#.</PackageDescription>
     <PackageTags>workflow orchestrator fluent orchestration tasks middleware</PackageTags>
-    <RepositoryUrl>https://github.com/vincentnacar02/Orca</RepositoryUrl>
+    <RepositoryUrl>https://github.com/vincentnacar02/OrcaFlow.Core</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageProjectUrl>https://github.com/vincentnacar02/Orca</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/vincentnacar02/OrcaFlow.Core</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
